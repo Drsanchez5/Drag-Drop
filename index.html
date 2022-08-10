@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<style>
+    *{
+        padding: 0;
+        margin:0;
+        box-sizing: border-box;
+    }
+
+    #cuerpo{
+        width:90%;
+        margin:auto;
+             
+    }
+
+    #contendor{
+       max-width: 100vw;
+        margin:auto;
+        display: flex;  
+        overflow-x: scroll;
+       
+    }
+
+    .columna{
+        width: 150px;
+        min-width: 150px;
+        min-height: 650px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        margin:2px;
+        padding:5px;
+        background-color: rgb(225, 225, 225); 
+    }
+
+    .columna.hover{
+        background-color: rgb(169, 166, 166); 
+    }
+
+    .ticket{
+        width:100%;
+        height: 100px;
+        margin:1px;
+        padding: 4px;
+        display: flex;
+        gap:5px;
+        flex-direction: column;
+        border:2px solid #fff;
+        cursor: move;
+        box-sizing: border-box;
+    }
+    .ticket.hover{
+        background-color: rgb(223, 197, 197); 
+    }
+</style>
+
+    </head>
+    <body>
+        <div id="cuerpo">
+            <h1>Jira</h1>
+            <div id="contendor">
+               
+
+            </div>
+        </div>
+        <script>
+            const contendor = document.getElementById('contendor');
+            const cantidadColumnas = 5;
+            
+            const tickets =["ticket0","ticket1","ticket2","ticket3","ticket4","ticket5","ticket6","ticket7"];
+            
+            var contadorCol = 0;
+            while(contadorCol < cantidadColumnas ){
+                const col = document.createElement("div");
+                col.id="col" + contadorCol;
+                col.classList.add("columna");
+                col.innerHTML= "<h3>Columna " + contadorCol + "</h3>"
+                contendor.appendChild(col);
+
+                col.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    e.target.classList.add('hover');
+                    
+                    console.log("Over")
+                });
+
+                col.addEventListener('dragleave', e => {
+                    e.target.classList.remove('hover');
+                });
+
+                col.addEventListener('drop', e => {
+                    console.log("Solta");
+                    const id = e.dataTransfer.getData('ticket_id');
+                    e.target.classList.remove('hover');
+                    e.target.appendChild(document.getElementById(id));
+                });
+
+                contadorCol++;
+            }
+            let contadorTIckets = tickets.length -1;
+            while(contadorTIckets >= 0){
+                
+                const colRandom = Math.floor(Math.random() * cantidadColumnas);
+                const elmColumna = document.getElementById("col" + colRandom);
+                const ticket = document.createElement("div");
+                ticket.id= "ticket" +  tickets[contadorTIckets];
+                ticket.classList.add("ticket");
+                ticket.setAttribute("draggable","true");
+                ticket.innerHTML = "<h4>Ticket " + contadorTIckets + "</h4>";
+                elmColumna.appendChild(ticket);
+
+                ticket.addEventListener('dragstart', e => {
+                    console.log("drag " + e.target.id);
+                    e.target.classList.add('hover');
+                    e.dataTransfer.setData('ticket_id', ticket.id);
+                });
+
+                contadorTIckets--;
+            }
+
+          
+           
+
+    </script>
+    </body>
+</html>
